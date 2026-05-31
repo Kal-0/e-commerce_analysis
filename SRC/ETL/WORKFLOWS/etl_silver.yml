@@ -1,0 +1,30 @@
+resources:
+  jobs:
+    silver_layer:
+      name: silver_layer
+      tasks:
+        - task_key: silver_orders
+          notebook_task:
+            notebook_path: /Workspace/Shared/e-commerce_analysis/SRC/ETL/2.SILVER/silver_orders
+            source: WORKSPACE
+          min_retry_interval_millis: 900000
+          disable_auto_optimization: true
+        
+        - task_key: silver_products_enriched
+          notebook_task:
+            notebook_path: /Workspace/Shared/e-commerce_analysis/SRC/ETL/2.SILVER/silver_products_enriched
+            source: WORKSPACE
+          min_retry_interval_millis: 900000
+          disable_auto_optimization: true
+        
+        - task_key: silver_order_products
+          depends_on:
+            - task_key: silver_orders
+          notebook_task:
+            notebook_path: /Workspace/Shared/e-commerce_analysis/SRC/ETL/2.SILVER/silver_order_products
+            source: WORKSPACE
+          min_retry_interval_millis: 900000
+          disable_auto_optimization: true
+      queue:
+        enabled: true
+      performance_target: PERFORMANCE_OPTIMIZED

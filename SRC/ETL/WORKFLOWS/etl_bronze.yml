@@ -1,0 +1,14 @@
+resources:
+  jobs:
+    bronze_layer:
+      name: bronze_layer
+      tasks:
+        - task_key: update_bronze_tables
+          notebook_task:
+            notebook_path: /Workspace/Shared/e-commerce_analysis/SRC/ETL/1.BRONZE/update_bronze_tables
+            source: WORKSPACE
+          min_retry_interval_millis: 900000
+          disable_auto_optimization: true
+      queue:
+        enabled: true
+      performance_target: PERFORMANCE_OPTIMIZED
