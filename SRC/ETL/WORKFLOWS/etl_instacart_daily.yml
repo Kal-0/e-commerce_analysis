@@ -1,0 +1,58 @@
+resources:
+  jobs:
+    etl_orchestrator:
+      name: etl_instacart_daily
+      tasks:
+        - task_key: run_bronze_layer
+          run_job_task:
+            job_id: ${bronze_job_id}
+          min_retry_interval_millis: 900000
+        
+        - task_key: run_silver_layer
+          depends_on:
+            - task_key: run_bronze_layer
+          run_job_task:
+            job_id: ${silver_job_id}
+          min_retry_interval_millis: 900000
+        
+        - task_key: run_gold_layer
+          depends_on:
+            - task_key: run_silver_layer
+          run_job_task:
+            job_id: ${gold_job_id}
+          min_retry_interval_millis: 900000
+      queue:
+        enabled: true
+      performance_target: PERFORMANCE_OPTIMIZED
+
+# ============================================================================
+# SETUP INSTRUCTIONS
+# ============================================================================
+# 
+# Before deploying this orchestrator, you must:
+# 
+# 1. Deploy Bronze job:
+#    databricks bundle deploy --target bronze
+#    Note the job_id from output
+# 
+# 2. Deploy Silver job:
+#    databricks bundle deploy --target silver
+#    Note the job_id from output
+# 
+# 3. Deploy Gold job:
+#    databricks bundle deploy --target gold
+#    Note the job_id from output
+# 
+# 4. Replace placeholders in this file:
+#    ${bronze_job_id} -> actual Bronze job ID
+#    ${silver_job_id} -> actual Silver job ID
+#    ${gold_job_id}   -> actual Gold job ID
+# 
+# 5. Deploy orchestrator:
+#    databricks bundle deploy --target orchestrator
+# 
+# Example:
+#   ${bronze_job_id} -> 123456
+#   ${silver_job_id} -> 123457
+#   ${gold_job_id}   -> 123458
+# ============================================================================

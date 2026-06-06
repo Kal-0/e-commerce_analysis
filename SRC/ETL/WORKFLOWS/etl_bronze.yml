@@ -1,0 +1,18 @@
+resources:
+  jobs:
+    bronze_layer:
+      name: bronze_layer
+      tasks:
+        - task_key: update_bronze_tables
+          notebook_task:
+            notebook_path: SRC/ETL/1.BRONZE/update_bronze_tables
+            source: GIT
+          min_retry_interval_millis: 900000
+          disable_auto_optimization: true
+      git_source:
+        git_url: https://github.com/Kal-0/e-commerce_analysis.git
+        git_provider: gitHub
+        git_branch: main
+      queue:
+        enabled: true
+      performance_target: PERFORMANCE_OPTIMIZED
