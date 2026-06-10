@@ -119,4 +119,56 @@
       │                           │                         │   • total_items
       │                           │                         │   • reordered_items
       │                           │                         │   • reorder_rate
+      │                           │                         │
+      │                           │                         ├─► price_band_performance
+      │                           │                         │   cross_category_patterns
+      │                           │                         │   add_to_cart_analysis
+      │                           │                         │   abc_analysis
+      │                           │                         └─► slow_moving_products
+
+      │
+      │ Plus: ft_executive_summary, ft_product_pairs, dt_customer_segmentation
+      │ Total: 15 Gold tables/views (DT, FT, VW)
+      │
+      │ FEEDS INTO ▼
+      │
+┌─────┴───────────────────────────────────────────────────────────────────────────┐
+│                        MACHINE LEARNING LAYER                                  │
+│  Location: SRC/ML/                                                              │
+│  Source: big_data.silver tables                                                 │
+│  Process: Product Recommendation System                                         │
+└────────────────────────────────────────────────────────────────────────────────┘
+      │
+      ├─► 1_Data_Preparation_Recommendation
+      │   • Feature engineering for recommendation
+      │   • User-product interaction matrix
+      │   • Train/validation/test split
+      │
+      ├─► 2_Model_Training_Recommendation
+      │   • Collaborative filtering model
+      │   • Hyperparameter optimization
+      │   • Performance evaluation (precision@k, recall@k, NDCG)
+      │
+      └─► 0_Run_Full_Pipeline
+          • End-to-end ML pipeline execution
+          • Data prep → Training → Evaluation
+
+      │
+      │ CONSUMED BY ▼
+      │
+┌─────┴───────────────────────────────────────────────────────────────────────────┐
+│                  VISUALIZATION & ANALYTICS LAYER                                │
+│  Location: SRC/ANALYSIS/                                                        │
+│  Platform: Databricks Lakeview Dashboards                                      │
+│  Source: big_data.gold tables & views                                          │
+└────────────────────────────────────────────────────────────────────────────────┘
+
+      ► Instacart Product & Customer Intelligence Dashboard
+        • Sales patterns by hour and period of day
+        • Customer segmentation insights (New/Occasional/Regular/Frequent/Loyal)
+        • Product performance metrics and analytics
+        • Department and aisle performance
+        • Reorder analysis and cross-selling opportunities
+        • Executive KPIs (revenue, orders, customers)
+        • Interactive visualizations for data-driven decision making
 ```

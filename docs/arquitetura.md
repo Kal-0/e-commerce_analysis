@@ -46,26 +46,66 @@ Metadado adicionado: `_silver_timestamp`.
 
 ### GOLD
 - **Schema:** `big_data.gold`
-- **Formato:** Delta Tables.
-- **Notebook:** `SRC/ETL/3.GOLD/analysis_gold_tables.ipynb`
-- **Status:** Em progresso
-- **Descrição:** Camada analítica com agregações e métricas de negócio prontas para consumo.
+- **Formato:** Delta Tables e Views.
+- **Notebooks:** 15 notebooks especializados em `SRC/ETL/3.GOLD/`
+- **Status:** Completo
+- **Descrição:** Camada analítica com agregações e métricas de negócio prontas para consumo. Inclui tabelas materializadas (Fact Tables e Dimension Tables) e views leves para análises específicas.
 
-Tabelas geradas:
+**Tabelas e Views Criadas:**
 
-**Sales Analytics**
-- `sales_by_time_period` — total de pedidos, itens vendidos e percentual por período do dia.
-- `sales_by_hour` — padrões de compra por hora, identificação de horários de pico.
-- `reorder_analysis_by_department` — total de itens, itens recomprados e taxa de recompra por departamento.
+**Dimension Tables (DT)**
+- `dt_customer_segmentation` — Tabela dimensional de segmentação de clientes (New/Occasional/Regular/Frequent/Loyal)
 
-**Customer Analytics**
-- `customer_segmentation` — segmentos: New / Occasional / Regular / Frequent / Loyal.
-- `customer_purchase_frequency` — distribuição por intervalo de dias entre compras.
+**Fact Tables (FT)**
+- `ft_executive_summary` — Resumo executivo com KPIs principais do negócio
+- `ft_product_performance` — Performance detalhada de produtos (vezes comprado, taxa de recompra, pedidos únicos)
+- `ft_product_pairs` — Pares de produtos frequentemente comprados juntos (market basket analysis)
 
-**Product Analytics**
-- `product_performance` — vezes comprado, pedidos únicos, vezes recomprado, taxa de recompra.
-- `department_performance` — produtos únicos, total vendido, pedidos únicos, itens recomprados, taxa de recompra, média de itens por pedido.
-- `reorder_analysis_by_aisle` — total de itens, itens recomprados e taxa de recompra por corredor.
+**Views (VW)**
+- `vw_sales_by_time_period` — Vendas por período do dia (morning/afternoon/evening/night)
+- `vw_sales_by_hour` — Padrões de vendas por hora do dia (identificação de picos)
+- `vw_customer_purchase_frequency` — Distribuição de frequência de compra (intervalos de dias)
+- `vw_customer_lifecycle_metrics` — Métricas de ciclo de vida do cliente
+- `vw_department_performance` — Performance agregada por departamento
+- `vw_reorder_analysis_by_department` — Análise de recompra por departamento
+- `vw_cross_category_patterns` — Padrões de compra cross-category
+- `vw_add_to_cart_analysis` — Análise da ordem de adição ao carrinho
+- `vw_price_band_performance` — Performance por faixa de preço
+
+**Análises Especializadas**
+- `product_abc_analysis` — Classificação ABC de produtos (curva de Pareto)
+- `slow_moving_products` — Identificação de produtos de baixo giro
+
+### MACHINE LEARNING
+- **Localização:** `SRC/ML/`
+- **Fonte de Dados:** Tabelas Silver (`big_data.silver.*`)
+- **Objetivo:** Sistema de recomendação de produtos baseado em histórico de compras
+- **Notebooks:**
+  1. **Data Preparation** (`1_Data_Preparation_Recommendation.ipynb`)
+     - Feature engineering de interações usuário-produto
+     - Criação de matriz de features para recomendação
+     - Preparação de datasets de treino/validação
+  
+  2. **Model Training** (`2_Model_Training_Recommendation.ipynb`)
+     - Treinamento do modelo de recomendação
+     - Otimização de hiperparâmetros
+     - Avaliação de performance (precision, recall, NDCG)
+  
+  3. **Full Pipeline** (`0_Run_Full_Pipeline.ipynb`)
+     - Execução end-to-end do pipeline de ML
+     - Orquestração de preparação e treinamento
+
+### VISUALIZATION & ANALYTICS
+- **Dashboard:** Instacart Product & Customer Intelligence
+- **Plataforma:** Databricks Lakeview Dashboards
+- **Localização:** `SRC/ANALYSIS/`
+- **Fonte de Dados:** Tabelas e Views da camada Gold (`big_data.gold.*`)
+- **Funcionalidades:**
+  - Dashboards interativos para exploração de insights
+  - Visualizações de vendas por tempo, departamento e categoria
+  - Métricas de segmentação de clientes
+  - Análise de performance de produtos
+  - KPIs executivos em tempo real
 
 ---
 
@@ -186,15 +226,43 @@ flowchart TD
 
 ```
 SRC/
-└── ETL/
-        ├── 0.RAW/
-        │   └── ingest_Instacart_kaggle.ipynb
-        ├── 1.BRONZE/
-        │   └── update_bronze_tables.ipynb
-        ├── 2.SILVER/
-        │   └── update_silver_tables.ipynb
-        └── 3.GOLD/
-                └── analysis_gold_tables.ipynb
+├── ETL/
+│   ├── 0.RAW/
+│   │   └── ingest_Instacart_kaggle.ipynb
+│   ├── 1.BRONZE/
+│   │   └── update_bronze_tables.ipynb
+│   ├── 2.SILVER/
+│   │   └── update_silver_tables.ipynb
+│   ├── 3.GOLD/
+│   │   ├── gold_dt_customer_segmentation.ipynb
+│   │   ├── gold_ft_executive_summary.ipynb
+│   │   ├── gold_ft_product_performance.ipynb
+│   │   ├── gold_ft_product_pairs.ipynb
+│   │   ├── gold_product_abc_analysis.ipynb
+│   │   ├── gold_vw_sales_by_time_period.ipynb
+│   │   ├── gold_vw_sales_by_hour.ipynb
+│   │   ├── gold_vw_customer_purchase_frequency.ipynb
+│   │   ├── gold_vw_customer_lifecycle_metrics.ipynb
+│   │   ├── gold_vw_department_performance.ipynb
+│   │   ├── gold_vw_reorder_analysis_by_department.ipynb
+│   │   ├── gold_vw_cross_category_patterns.ipynb
+│   │   ├── gold_vw_add_to_cart_analysis.ipynb
+│   │   ├── gold_vw_price_band_performance.ipynb
+│   │   └── gold_vw_slow_moving_products.ipynb
+│   ├── UTILS/
+│   │   └── utils.ipynb              # Funções de validação reutilizáveis
+│   ├── TEMPLATES/
+│   │   ├── table_templates/         # Templates Fact/Dimension Tables
+│   │   └── view_template/           # Templates Views
+│   ├── WORKFLOWS/                   # Workflows de orquestração
+│   └── AGENTS.md                    # Padrões e convenções ETL
+├── ANALYSIS/
+│   ├── Instacart Product & Customer Intelligence (Dashboard)
+│   └── Structural EDA Bronze Layer Instacart.ipynb
+└── ML/
+    ├── 0_Run_Full_Pipeline.ipynb
+    ├── 1_Data_Preparation_Recommendation.ipynb
+    └── 2_Model_Training_Recommendation.ipynb
 ```
 
 ---
@@ -209,5 +277,8 @@ SRC/
 | Linguagem | Python 3.x |
 | Formato de origem | CSV |
 | Formato de destino | Delta Tables |
-| Visualização | Databricks `display()` |
+| Visualização | Databricks Lakeview Dashboards |
+| Machine Learning | Spark MLlib / Python ML libraries |
 | Controle de versão | Git / GitHub |
+| Padrões ETL | Templates modulares + UTILS |
+| Computação | Databricks Serverless |

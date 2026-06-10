@@ -41,7 +41,7 @@ Arquivos CSV ingeridos na camada RAW:
 | Processamento | Apache Spark / PySpark |
 | Armazenamento | Delta Lake |
 | Linguagem | Python 3.x |
-| Visualização | Databricks `display()` |
+| Visualização | Databricks Lakeview Dashboards |
 | Formato de dados | CSV (Raw), Delta Tables (Bronze/Silver/Gold) |
 
 ---
@@ -79,6 +79,39 @@ Arquivos CSV ingeridos na camada RAW:
 5. Os resultados ficam disponíveis como tabelas Delta no schema `big_data.*`.
 
 Mais detalhes em [docs/arquitetura.md](docs/arquitetura.md).
+
+---
+
+## Visualização e Análise
+
+### Dashboard Interativo
+O projeto inclui um **Lakeview Dashboard** completo no Databricks:
+
+* **Nome:** Instacart Product & Customer Intelligence
+* **Localização:** `SRC/ANALYSIS/`
+* **Fonte de dados:** Tabelas da camada Gold (`big_data.gold.*`)
+* **Conteúdo:**
+  * Padrões de vendas por hora e período do dia
+  * Segmentação de clientes (New, Occasional, Regular, Frequent, Loyal)
+  * Performance de produtos e departamentos
+  * Análise de recompra por categoria
+  * Métricas executivas (KPIs principais)
+
+O dashboard consome diretamente as tabelas Gold e oferece visualizações interativas para exploração de insights de negócio.
+
+### Machine Learning
+Pipeline de **recomendação de produtos** implementado com notebooks na pasta `SRC/ML/`:
+
+1. **Preparação de Dados** (`1_Data_Preparation_Recommendation.ipynb`)
+   * Feature engineering a partir das tabelas Silver
+   * Criação de features de interação usuário-produto
+
+2. **Treinamento do Modelo** (`2_Model_Training_Recommendation.ipynb`)
+   * Treinamento do modelo de recomendação
+   * Avaliação e otimização de hiperparâmetros
+
+3. **Pipeline Completo** (`0_Run_Full_Pipeline.ipynb`)
+   * Execução end-to-end do pipeline de ML
 
 ---
 
