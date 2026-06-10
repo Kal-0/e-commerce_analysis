@@ -97,4 +97,6 @@ Os resultados ficam disponíveis como tabelas Delta no schema `big_data.gold`, c
 | Ingestão (RAW) | Finalizado |
 | Armazenamento Bronze | Finalizado |
 | Transformação Silver | Finalizado |
-| Camada Gold (Analítica) | Em progresso |
+| Camada Gold (Analítica) | Finalizado |
+| Machine Learning (Recomendação) | Finalizado |
+| Dashboard & Visualização | Finalizado |
